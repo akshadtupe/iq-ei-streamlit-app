@@ -28,17 +28,21 @@ def home_page():
         """
     )
 
-st.divider()
+    st.divider()
 
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
-    if st.button("Start IQ Test"):
+    with col1:
+        start_iq = st.button("Start IQ Test")
+
+    with col2:
+        start_ei = st.button("Start EI Test")
+    
+    if start_iq:
         go_to("iq")
-
-with col2:
-    if st.button("Start EI Test"):
+    if start_ei:
         go_to("ei")
+        
 
 def iq_page():
     st.title("📊 IQ Test")

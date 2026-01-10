@@ -1,4 +1,4 @@
-# IQ & Emotional Intelligence Score Finder App
+# IQ & Emotional Intelligence Score F App
 
 Web application to estimate IQ and Emotional Intelligence (EI)
 scores through interactive questionnaires.
