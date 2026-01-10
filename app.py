@@ -44,10 +44,49 @@ def home_page():
         go_to("ei")
         
 
+from iq_questions import IQ_QUESTIONS
+
 def iq_page():
     st.title("📊 IQ Test")
-    st.info("IQ test questions will appear here.")
-    st.button("⬅ Back to Home", on_click=go_to, args=("home",))
+    #Initialize session state
+    if "iq_q_index" not in st.session_state:
+        st.session_state.iq_q_index = 0
+
+    if "iq_answers" not in st.session_state:
+        st.session_state.iq_answers = {}
+
+    q_index = st.session_state.iq_q_index
+    question = IQ_QUESTIONS[q_index]
+
+    #progress bar and question number
+    st.progress((q_index + 1) / len(IQ_QUESTIONS))
+    st.caption(f"Question {q_index + 1} of {len(IQ_QUESTIONS)}")
+
+    st.markdown(f"### {question['question']}")
+
+    #Answer Selection
+    selected = st.radio(
+    "Select your answer:",
+    question["options"],
+    key=f"iq_{question['id']}"
+    )
+
+    #Navigation Buttons
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("⬅ Back"):
+            if q_index > 0:
+                st.session_state.iq_q_index -= 1
+
+    with col2:
+        if st.button("Next ➡"):
+            st.session_state.iq_answers[question["id"]] = selected
+
+            if q_index < len(IQ_QUESTIONS) - 1:
+                st.session_state.iq_q_index += 1
+            else:
+                st.session_state.page = "iq_result"
 
 
 def ei_page():
