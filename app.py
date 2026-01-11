@@ -77,12 +77,12 @@ def iq_page():
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("⬅ Back"):
+        if st.button("Back"):
             if q_index > 0:
                 st.session_state.iq_q_index -= 1
 
     with col2:
-        if st.button("Next ➡"):
+        if st.button("Next"):
             st.session_state.iq_answers[question["id"]] = selected
 
             if q_index < len(IQ_QUESTIONS) - 1:
@@ -91,13 +91,61 @@ def iq_page():
                 st.session_state.page = "iq_result"
 
 
+from ei_questions import EI_QUESTIONS
 def ei_page():
     st.title("💬 Emotional Intelligence Test")
-    st.info("EI test questions will appear here.")
-    st.button("⬅ Back to Home", on_click=go_to, args=("home",))
+
+    if "ei_q_index" not in st.session_state:
+        st.session_state.ei_q_index = 0
+
+    if "ei_answers" not in st.session_state:
+        st.session_state.ei_answers = {}
+
+    q_index = st.session_state.ei_q_index
+    question = EI_QUESTIONS[q_index]
+
+    #Progress Bar
+    st.progress((q_index + 1) / len(EI_QUESTIONS))
+    st.caption(f"Question {q_index + 1} of {len(EI_QUESTIONS)}")
+
+    st.markdown(f"### {question['question']}")
+    st.caption(f"Dimension: *{question['dimension']}*")
+
+    #Likert scale
+    selected = st.radio(
+        "How much do you agree with this statement?",
+        options=[1, 2, 3, 4, 5],
+        format_func=lambda x: {
+            1: "Strongly Disagree",
+            2: "Disagree",
+            3: "Neutral",
+            4: "Agree",
+            5: "Strongly Agree"
+        }[x],
+        key=f"ei_{question['id']}"
+    )
+
+    #Navigation button
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Back"):
+            if q_index > 0:
+                st.session_state.ei_q_index -= 1
+
+    with col2:
+        if st.button("Next"):
+            st.session_state.ei_answers[question["id"]] = selected
+
+            if q_index < len(EI_QUESTIONS) - 1:
+                st.session_state.ei_q_index += 1
+            else:
+                st.session_state.page = "ei_result"
+
+
+#RESULT PAGES
 
 from score_logic import calculate_iq_score, map_raw_score_to_iq
-
 def iq_result_page():
     st.title("📈 Your IQ Test Result")
 
@@ -167,6 +215,15 @@ def iq_result_page():
             st.session_state.iq_q_index = 0
             st.session_state.iq_answers = {}
             go_to("home")
+        
+
+def ei_result_page():
+    st.title("📊 Emotional Intelligence Result")
+    st.info("EI score interpretation will appear here.")
+    st.button("⬅ Back to Home", on_click=go_to, args=("home",))
+
+
+
 
 #page routing
 if st.session_state.page == "home":
@@ -177,3 +234,8 @@ elif st.session_state.page == "ei":
     ei_page()
 elif st.session_state.page == "iq_result":
     iq_result_page()
+elif st.session_state.page == "ei":
+    ei_page()
+elif st.session_state.page == "ei_result":
+    ei_result_page()
+
