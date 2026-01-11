@@ -109,7 +109,6 @@ def ei_page():
     st.caption(f"Question {q_index + 1} of {len(EI_QUESTIONS)}")
 
     st.markdown(f"### {question['question']}")
-    st.caption(f"Dimension: *{question['dimension']}*")
 
     #Likert scale
     selected = st.radio(
@@ -216,11 +215,89 @@ def iq_result_page():
             st.session_state.iq_answers = {}
             go_to("home")
         
+from score_logic import calculate_ei_score, interpret_ei_score
 
 def ei_result_page():
-    st.title("📊 Emotional Intelligence Result")
-    st.info("EI score interpretation will appear here.")
-    st.button("⬅ Back to Home", on_click=go_to, args=("home",))
+    st.title("📊 Your Emotional Intelligence Result")
+
+    user_answers = st.session_state.get("ei_answers", {})
+
+    if not user_answers:
+        st.warning("No responses found. Please complete the assessment first.")
+        st.button("⬅ Back to Home", on_click=go_to, args=("home",))
+        return
+
+    total_score = calculate_ei_score(user_answers)
+    interpretation = interpret_ei_score(total_score)
+
+    st.subheader(f"💬 EI Score: **{total_score} / 50**")
+    st.subheader(f"🔍 Level: **{interpretation}**")
+
+    st.divider()
+
+    #Interpretation & comparison
+    if total_score <= 20:
+        explanation = (
+            "This suggests challenges in recognizing, regulating, or responding to emotions. "
+            "Developing emotional awareness and reflection can help."
+        )
+        comparison = (
+            "Comparable to individuals early in emotional skill development."
+        )
+
+    elif total_score <= 30:
+        explanation = (
+            "This indicates an average level of emotional intelligence. "
+            "You manage emotions reasonably well in most situations."
+        )
+        comparison = (
+            "Comparable to the general adult population."
+        )
+
+    elif total_score <= 40:
+        explanation = (
+            "This reflects strong emotional awareness, empathy, and regulation skills."
+        )
+        comparison = (
+            "Often associated with effective leaders, educators, and team collaborators, "
+            "such as " + "" + " (inspirational comparison)."
+        )
+
+    else:
+        explanation = (
+            "This suggests very high emotional intelligence with strong empathy, self-regulation, "
+            "and interpersonal effectiveness."
+        )
+        comparison = (
+            "Often associated with figures known for emotional wisdom and compassion, such as "
+            + ""
+            + " (inspirational comparison)."
+        )
+
+    st.markdown(f"**What this means:** {explanation}")
+    st.markdown(f"**Comparison:** {comparison}")
+
+    st.divider()
+
+    st.caption(
+        "⚠️ EI results are based on self-reported responses and reflect perceived emotional skills, "
+        "For Fun and Educational Purposes."
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Retake EI Test"):
+            st.session_state.ei_q_index = 0
+            st.session_state.ei_answers = {}
+            go_to("ei")
+
+    with col2:
+        if st.button("Back to Home"):
+            st.session_state.ei_q_index = 0
+            st.session_state.ei_answers = {}
+            go_to("home")
+
 
 
 
