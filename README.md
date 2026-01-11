@@ -1,6 +1,3 @@
-# IQ & Emotional Intelligence Score F App
+## 🚀 Live Demo
+🔗 https://iq-ei-app-app-krmqrrqrnpd3g3ykbuknwa.streamlit.app/
 
-Web application to estimate IQ and Emotional Intelligence (EI)
-scores through interactive questionnaires.
-
-> ⚠️ This app is for educational and fun purposes only.
