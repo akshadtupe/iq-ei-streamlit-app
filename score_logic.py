@@ -27,3 +27,27 @@ def map_raw_score_to_iq(raw_score):
         return "110–125"
     else:
         return "125–140"
+
+
+
+#EI Scoring Logic
+def calculate_ei_score(user_answers):
+    """
+    user_answers: dict -> {question_id: score (1–5)}
+    """
+    total_score = sum(user_answers.values())
+    return total_score
+
+
+def interpret_ei_score(score):
+    """
+    EI score interpretation based on total (10–50)
+    """
+    if score <= 20:
+        return "Low Emotional Intelligence"
+    elif score <= 30:
+        return "Average Emotional Intelligence"
+    elif score <= 40:
+        return "High Emotional Intelligence"
+    else:
+        return "Very High Emotional Intelligence"

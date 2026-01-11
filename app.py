@@ -99,7 +99,7 @@ def ei_page():
 from score_logic import calculate_iq_score, map_raw_score_to_iq
 
 def iq_result_page():
-    st.title("📈 Your IQ Assessment Result")
+    st.title("📈 Your IQ Test Result")
 
     user_answers = st.session_state.get("iq_answers", {})
 
